@@ -1,4 +1,5 @@
 import std/sequtils
+import sugar
 
 
 proc readToSec(path: string): seq[string] =
@@ -30,38 +31,91 @@ func sum(lines: seq[seq[int]]): seq[int] =
             result[index] += value
 
 
-func commonBit(sums: seq[int], length: int): seq[int] =
-    for value in sums:
-        if value > (length div 2):
-            result.add(1)
-        else:
-            result.add(0)
-
-
 func seqToInt(bits: seq[int]): int =
     result = 0
     for bit in bits:
         result = result * 2 + bit
 
 
-func invert(bits: seq[int]): seq[int] =
-    for bit in bits:
-        result.add(1 - bit)
-
-
 assert lineToBits("1011101") == [1, 0, 1, 1, 1, 0, 1]
 assert sum(@[@[1,1], @[1,0]]) == @[2,1]
-assert commonBit(@[1, 2, 3, 4, 5, 6], 6) == @[0, 0, 0, 1, 1, 1]
-assert invert(@[0, 1, 0, 1]) == @[1, 0, 1, 0]
 assert seqToInt(@[0, 1, 0, 1]) == 5
 
 
-let lines = readToSec("input/3")
-let bits = map(lines, lineToBits)
-let sums = sum(bits)
-let common = commonBit(sums, bits.len)
+func calcCommon(bits: seq[seq[int]]): seq[int] =
+    let sums = sum(bits)
+    for value in sums:
+        if value >= ((bits.len + 1) div 2):
+            result.add(1)
+        else:
+            result.add(0)
 
-let gamma = seqToInt(common)
-let epsilon = seqToInt(invert(common))
 
-echo("Power: ", gamma * epsilon)
+assert calcCommon(@[@[0, 1]]) == @[0, 1]
+assert calcCommon(@[@[0], @[1]]) == @[1]
+assert calcCommon(@[@[0], @[0]]) == @[0]
+assert calcCommon(@[@[0], @[0], @[1]]) == @[0]
+assert calcCommon(@[@[0], @[1], @[1]]) == @[1]
+
+
+func calcUncommon(bits: seq[seq[int]]): seq[int] =
+    let sums = sum(bits)
+    for value in sums:
+        if value == 0:
+            result.add(0)
+        elif value == bits.len:
+            result.add(1)
+        elif value >= ((bits.len + 1) div 2):
+            result.add(0)
+        else:
+            result.add(1)
+
+
+assert calcUncommon(@[@[0, 1]]) == @[0, 1]
+assert calcUncommon(@[@[0], @[1]]) == @[0]
+assert calcUncommon(@[@[0], @[0]]) == @[0]
+assert calcUncommon(@[@[0], @[0], @[1]]) == @[1]
+assert calcUncommon(@[@[0], @[1], @[1]]) == @[0]
+
+
+func filterBitCriteria(bits: seq[seq[int]], fun: (seq[seq[int]] -> seq[int])): seq[int] =
+    var filtered = bits
+    for i in 0..11:
+        let criteria = fun(filtered)
+        filtered = filter(filtered, (x) => x[i] == criteria[i])
+        #debugEcho(i, criteria)
+        #debugEcho(filtered)
+        if filtered.len == 1:
+            break
+
+    if filtered.len != 1:
+        return @[]
+
+    return filtered[0]
+
+
+assert filterBitCriteria(@[@[0], @[1]], calcCommon) == @[1]
+assert filterBitCriteria(@[@[1], @[0]], calcCommon) == @[1]
+assert filterBitCriteria(@[@[0], @[1]], calcUncommon) == @[0]
+assert filterBitCriteria(@[@[1], @[0]], calcUncommon) == @[0]
+assert filterBitCriteria(@[@[1, 1], @[1, 0]], calcCommon) == @[1, 1]
+assert filterBitCriteria(@[@[1, 1], @[1, 0]], calcUncommon) == @[1, 0]
+
+
+proc solution(path: string): int =
+    let lines = readToSec(path)
+    let bits = map(lines, lineToBits)
+
+    let gamma = seqToInt(calcCommon(bits))
+    let epsilon = seqToInt(calcUncommon(bits))
+
+    echo("Power: ", gamma * epsilon)
+
+    let o2rating = seqToInt(filterBitCriteria(bits, calcCommon))
+    let co2rating = seqToInt(filterBitCriteria(bits, calcUncommon))
+
+    echo("Life support rating: ", o2rating * co2rating)
+
+
+#echo(solution("input/3example"))
+echo(solution("input/3"))
