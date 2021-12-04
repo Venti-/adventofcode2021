@@ -89,6 +89,19 @@ proc findWinner(path: string): (Board, int) =
         boards = newBoards
 
 
+proc findLastWinner(path: string): (Board, int) =
+    var (numbers, boards) = readInputFromPath(path, 5, 5)
+    for number in numbers:
+        var newBoards: seq[Board]
+        for board in boards:
+            let newBoard = takeNumber(board, number)
+            if boards.len == 1 and isBingo(newBoard):
+                return (newBoard, number)
+            elif not isBingo(newBoard):
+                newBoards.add(newBoard)
+        boards = newBoards
+
+
 proc calcBoardSum(board: Board): int =
     var sum = 0
     for row in board:
@@ -167,15 +180,28 @@ when isMainModule:
             ]
             check: calcBoardSum(board) == 7
 
-        test "example":
+        test "example 1":
             let (board, number) = findWinner("input/4example")
             check:
                 number == 24
                 calcBoardSum(board) == 188
 
+        test "example 2":
+            let (board, number) = findLastWinner("input/4example")
+            check:
+                number == 13
+                calcBoardSum(board) == 148
+
 when isMainModule:
-    let (board, number) = findWinner("input/4")
-    echo("Number: " & $number)
-    echo("Board: " & $board)
-    let solution = calcBoardSum(board) * number
-    echo("Solution: " & $solution)
+    block:
+        let (board, number) = findWinner("input/4")
+        echo("Number: " & $number)
+        echo("Board: " & $board)
+        let solution = calcBoardSum(board) * number
+        echo("Solution 1: " & $solution)
+    block:
+        let (board, number) = findLastWinner("input/4")
+        echo("Number: " & $number)
+        echo("Board: " & $board)
+        let solution = calcBoardSum(board) * number
+        echo("Solution 2: " & $solution)
