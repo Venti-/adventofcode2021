@@ -34,23 +34,22 @@ func getDirection(value: int): int =
         return 0
 
 
-func getLine(line: Line): seq[Point] =
+iterator getLine(line: Line): Point =
     var a: Point = line.a
     let b: Point = line.b
     let dy = getDirection(b.y - a.y)
     let dx = getDirection(b.x - a.x)
 
-    result.add((a.y, a.x))
+    yield (a.y, a.x)
     while a.y != b.y or a.x != b.x:
         #debugEcho("a: ", a, " b: ", b)
         a.y += dy
         a.x += dx
-        result.add((a.y, a.x))
+        yield (a.y, a.x)
 
 
 func drawLine(buffer: CountTableRef[Point], line: Line): void =
-    let points = getLine(line)
-    for point in points:
+    for point in getLine(line):
         buffer.inc(point)
 
 
@@ -89,13 +88,13 @@ when isMainModule:
         test "getLine":
             check:
                 # Point
-                getLine(((1,1), (1,1))) == [(1,1)]
+                getLine(((1,1), (1,1))).toSeq() == [(1,1)]
                 # Horizontal line
-                getLine(((1,1), (1,2))) == [(1,1), (1,2)]
-                getLine(((1,2), (1,1))) == [(1,2), (1,1)]
+                getLine(((1,1), (1,2))).toSeq() == [(1,1), (1,2)]
+                getLine(((1,2), (1,1))).toSeq() == [(1,2), (1,1)]
                 # Vertical line
-                getLine(((1,1), (2,1))) == [(1,1), (2,1)]
-                getLine(((2,1), (1,1))) == [(2,1), (1,1)]
+                getLine(((1,1), (2,1))).toSeq() == [(1,1), (2,1)]
+                getLine(((2,1), (1,1))).toSeq() == [(2,1), (1,1)]
 
         test "drawLinearLine":
             let buffer: CountTableRef[Point] = newCountTable[Point]()
