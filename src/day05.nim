@@ -4,6 +4,7 @@ import std/sequtils
 import std/streams
 import std/tables
 import std/times
+import sugar
 
 type
     Point = tuple
@@ -59,14 +60,14 @@ func isStraight(line: Line): bool =
     return a.x == b.x or a.y == b.y
 
 
-proc countOverlaps(path: string): int =
+proc countOverlaps(path: string, pred: (Line) -> bool): int =
     let buffer: CountTableRef[Point] = newCountTable[Point]()
     let f = newFileStream(path)
     defer: f.close()
     var lineStr: string
     while f.readLine(lineStr):
         let line = parseLine(lineStr)
-        if isStraight(line):
+        if pred(line):
             drawLine(buffer, line)
 
     for v in buffer.values:
@@ -111,10 +112,19 @@ when isMainModule:
         
         test "example 1":
             check:
-                countOverlaps("input/5example") == 5
+                countOverlaps("input/5example", isStraight) == 5
+        
+        test "example 2":
+            check:
+                countOverlaps("input/5example", (line) => true) == 12
 
 when isMainModule:
     block:
         let cpu = cpuTime()
-        echo("solition 1: ", countOverlaps("input/5"))
+        echo("solition 1: ", countOverlaps("input/5", isStraight))
+        echo("time: ", cpuTime() - cpu)
+
+    block:
+        let cpu = cpuTime()
+        echo("solition 2: ", countOverlaps("input/5", (line) => true))
         echo("time: ", cpuTime() - cpu)
