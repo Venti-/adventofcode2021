@@ -8,18 +8,20 @@ import sugar
 
 
 type
-    Ages = CountTableRef[int]
+    Ages = CountTableRef[uint64]
 
 
 func newAges(): Ages =
-    return newCountTable[int](9)
+    return newCountTable[uint64](9)
 
 
 func newAges(ages: openArray[int]): Ages =
-    return newCountTable[int](ages)
+    result = newAges()
+    for age in ages:
+        result.inc(uint64(age))
 
 
-func sum(ages: Ages): int =
+func sum(ages: Ages): uint64 =
     return ages.values.toSeq.foldl(a + b, 0)
 
 
@@ -27,7 +29,7 @@ proc parseInput(s: string): Ages =
     result = newAges()
     for ageStr in split(s, {',', '\n', '\r'}):
         if ageStr != "":
-            result.inc(parseInt(ageStr))
+            result.inc(parseUInt(ageStr))
 
 
 func simulate(ages: Ages): Ages =
@@ -65,6 +67,15 @@ when isMainModule:
 
 when isMainModule:
     block:
+        let cpu = cpuTime()
         let day0 = parseInput(readFile("input/6"))
         let day80 = simulate(day0, 80)
         echo("Day 80 sum: ", day80.sum())
+        echo("time: ", cpuTime() - cpu)
+
+    block:
+        let cpu = cpuTime()
+        let day0 = parseInput(readFile("input/6"))
+        let day256 = simulate(day0, 256)
+        echo("Day 256 sum: ", day256.sum())
+        echo("time: ", cpuTime() - cpu)
