@@ -11,29 +11,29 @@ type
     Crabs = CountTableRef[int]
 
 
-func newAges(): Crabs =
+func newCrabs(): Crabs =
     return newCountTable[int](9)
 
 
-func newAges(ages: openArray[int]): Crabs =
-    result = newAges()
-    for age in ages:
-        result.inc(int(age))
+func newCrabs(crabs: openArray[int]): Crabs =
+    result = newCrabs()
+    for pos in crabs:
+        result.inc(pos)
 
 
-func calcFuel(ages: Crabs, level: int): int =
-    for pos, cnt in ages:
+func calcFuel(crabs: Crabs, level: int): int =
+    for pos, cnt in crabs:
         result += abs(pos - level) * cnt
 
 
-func calcExpFuel(ages: Crabs, level: int): int =
-    for pos, cnt in ages:
+func calcExpFuel(crabs: Crabs, level: int): int =
+    for pos, cnt in crabs:
         let n = abs(pos - level)
         result += ((n * (n + 1)) div 2) * cnt
 
 
 proc parseInput(s: string): Crabs =
-    result = newAges()
+    result = newCrabs()
     for pos in split(s, {',', '\n', '\r'}):
         if pos != "":
             result.inc(parseInt(pos))
@@ -63,28 +63,28 @@ func findLowestFuel(crabs: Crabs, fun: (Crabs, int) -> int): int =
 
 when isMainModule:
     import std/unittest
-    suite "Day6":
+    suite "Day7":
         test "Read example input":
-            let ages = parseInput(readFile("input/7example"))
+            let crabs = parseInput(readFile("input/7example"))
             check:
-                ages == newAges([16,1,2,0,4,2,7,1,2,14])
+                crabs == newCrabs([16,1,2,0,4,2,7,1,2,14])
 
         test "calcFuel":
-            let day0 = parseInput(readFile("input/7example"))
+            let crabs = parseInput(readFile("input/7example"))
             check:
-                calcFuel(day0, 1) == 41
-                calcFuel(day0, 2) == 37
-                calcFuel(day0, 3) == 39
-                calcFuel(day0, 10) == 71
-                findLowestFuel(day0, calcFuel) == 2
-        
+                calcFuel(crabs, 1) == 41
+                calcFuel(crabs, 2) == 37
+                calcFuel(crabs, 3) == 39
+                calcFuel(crabs, 10) == 71
+                findLowestFuel(crabs, calcFuel) == 2
+
         test "calcExpFuel":
-            let day0 = parseInput(readFile("input/7example"))
+            let crabs = parseInput(readFile("input/7example"))
             check:
-                calcExpFuel(day0, 0) == 290
-                calcExpFuel(day0, 2) == 206
-                calcExpFuel(day0, 5) == 168
-                findLowestFuel(day0, calcExpFuel) == 5
+                calcExpFuel(crabs, 0) == 290
+                calcExpFuel(crabs, 2) == 206
+                calcExpFuel(crabs, 5) == 168
+                findLowestFuel(crabs, calcExpFuel) == 5
 
 when isMainModule:
     block:
