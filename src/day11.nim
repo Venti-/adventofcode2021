@@ -93,6 +93,16 @@ func countFlashes(startCave: Cave, steps: int): int =
         result += cave.values().toSeq().filterIt(it == 0).len()
 
 
+func findFlashes(startCave: Cave): int =
+    var cave = startCave
+    let fullFlash = cave.len() * cave[0].len()
+    for step in 1 .. int.high:
+        cave = cave.simulate()
+        let flashes = cave.values().toSeq().filterIt(it == 0).len()
+        if flashes == fullFlash:
+            return step
+
+
 when isMainModule:
     import std/unittest
     suite "Day10":
@@ -117,3 +127,6 @@ when isMainModule:
 
     benchmark:
         echo("Solution 1: ", countFlashes(readInput(readFile("input/11")), 100))
+
+    benchmark:
+        echo("Solution 2: ", findFlashes(readInput(readFile("input/11"))))
