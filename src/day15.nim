@@ -93,6 +93,13 @@ proc bfs(board: Board, start: Point, dest: Point): seq[Point] =
     result = tracePath(visited, current, start)
 
 
+template benchmark(code: untyped) =
+    block:
+        let cpu = cpuTime()
+        code
+        echo("cpuTime: ", cpuTime() - cpu)
+
+
 when isMainModule:
     import std/unittest
     suite "Day15":
@@ -121,14 +128,16 @@ when isMainModule:
             check path.mapIt(board[it.y][it.x]).foldl(a + b) == 315
         
         test "solution 1":
-            let board = readInput(newFileStream("input/15"))
-            let path = bfs(board, (0, 0), (board.high, board[0].high))
-            #echo path.mapIt(($it.y & "," & $it.x, board[it.y][it.x]))
-            check path.mapIt(board[it.y][it.x]).foldl(a + b) == 540
+            benchmark:
+                let board = readInput(newFileStream("input/15"))
+                let path = bfs(board, (0, 0), (board.high, board[0].high))
+                #echo path.mapIt(($it.y & "," & $it.x, board[it.y][it.x]))
+                check path.mapIt(board[it.y][it.x]).foldl(a + b) == 540
         
         # Works buit slooooow.
-        #[test "solution 2":
-            let board = readInput(newFileStream("input/15")).repeat(5, 5)
-            let path = bfs(board, (0, 0), (board.high, board[0].high))
-            #echo path.mapIt(($it.y & "," & $it.x, board[it.y][it.x]))
-            check path.mapIt(board[it.y][it.x]).foldl(a + b) == 2879]#
+        test "solution 2":
+            benchmark:
+                let board = readInput(newFileStream("input/15")).repeat(5, 5)
+                let path = bfs(board, (0, 0), (board.high, board[0].high))
+                #echo path.mapIt(($it.y & "," & $it.x, board[it.y][it.x]))
+                check path.mapIt(board[it.y][it.x]).foldl(a + b) == 2879
