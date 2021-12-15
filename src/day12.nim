@@ -39,19 +39,26 @@ proc readInput(stream: Stream): Edges =
 func isUpperCase(node: string): bool = node.toUpper == node
 
 
-func findEnd(edges: Edges, node: string, visited: Nodes): iterator(): seq[string] =
+# start,b,A,c,A,c,A,end
+func findEnd(edges: Edges, node: string, visitLimit: int, visited: CountTable[string]): iterator(): seq[string] =
     return iterator (): seq[string] =
         if node == "end":
             yield @[node]
         for neighbor in edges[node]:
-            if not (neighbor in visited) or neighbor.isUpperCase:
-                for route in toItr(findEnd(edges, neighbor, visited + [node].toHashSet)):
-                    yield @[node] & route
+            if node in visited:
+                if visited.largest[1] == visitLimit:
+                    continue
+
+            var visited2: CountTable[string] = visited
+            if not node.isUpperCase:
+                visited2.inc(node)
+            for route in toItr(findEnd(edges, neighbor, visitLimit, visited2)):
+                yield @[node] & route
 
 
-iterator iterRoutes(edges: Edges): seq[string] =
-    var visited: Nodes
-    for route in toItr(findEnd(edges, "start", visited)):
+iterator iterRoutes(edges: Edges, visitLimit: int): seq[string] =
+    var visited: CountTable[string]
+    for route in toItr(findEnd(edges, "start", visitLimit, visited)):
         yield route
 
 
@@ -75,15 +82,28 @@ when isMainModule:
                     }.newTable()
             check edges == expected
 
-        test "example":
+        test "example 1":
             let edges = readInput(newFileStream("input/12example"))
             let routes = collect:
-                for route in iterRoutes(edges): route
+                for route in iterRoutes(edges, 1): route
             check routes.len == 10
+
+        test "example 2":
+            let edges = readInput(newFileStream("input/12example"))
+            let routes = collect:
+                for route in iterRoutes(edges, 2): route
+            check routes.len == 36
         
         test "solution 1":
             let edges = readInput(newFileStream("input/12"))
             benchmark:
                 let routes = collect:
-                    for route in iterRoutes(edges): route
+                    for route in iterRoutes(edges, 1): route
                 check routes.len == 4304
+
+        test "solution 2":
+            let edges = readInput(newFileStream("input/12"))
+            benchmark:
+                let routes = collect:
+                    for route in iterRoutes(edges, 2): route
+                check routes.len == 118242
