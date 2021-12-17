@@ -79,40 +79,39 @@ proc readPacket(stream: Stream): Packet =
     result.bits = 6
 
     if result.typeId == TypeId.literal:
-        var lastPacket = false
+        var isLastPacket = false
         var value = 0
-        while not lastPacket:
+        while not isLastPacket:
             let group = stream.readStr(5)
             result.bits += 5
-            lastPacket = group[0] == '0'
+            isLastPacket = group[0] == '0'
             value = (value shl 4) + binstrToInt(group[1..4])
         result.value = value
     else:
         let lengthTypeId = stream.readBitstrInt(1)
         result.bits += 1
-        
         var packets: seq[Packet]
 
         if lengthTypeId == 0:
             let bitsToRead = stream.readBitstrInt(15)
             result.bits += 15
-            var bitsRead = 0
-            while bitsRead < bitsToRead:
+            var bitsRed = 0
+            while bitsRed < bitsToRead:
                 let packet = readPacket(stream)
-                bitsRead += packet.bits
-                result.version += packet.version
                 packets.add(packet)
-            result.bits += bitsRead
+                bitsRed += packet.bits
         else:
             let packetsToRead = stream.readBitstrInt(11)
             result.bits += 11
-            var backetsRead = 0
-            while backetsRead < packetsToRead:
+            var packetsRed = 0
+            while packetsRed < packetsToRead:
                 let packet = readPacket(stream)
-                backetsRead += 1
-                result.version += packet.version
-                result.bits += packet.bits
                 packets.add(packet)
+                packetsRed += 1
+        
+        for packet in packets:
+            result.version += packet.version
+            result.bits += packet.bits
 
         result.value = calcValue(result.typeId, packets)
         logger.log(lvlDebug, fmt"calcValue: {result.typeId} {packets.mapIt(it.value)} = {result.value}")
