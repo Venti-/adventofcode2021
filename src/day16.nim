@@ -1,11 +1,12 @@
 import std/strutils
 import std/streams
-import std/tables
-import std/sets
-import std/times
 import std/sequtils
-import std/algorithm
 import std/bitops
+import std/logging
+import std/strformat
+
+
+var logger = newConsoleLogger(levelThreshold=lvlInfo)
 
 
 type
@@ -48,7 +49,6 @@ proc readBitstrInt(stream: Stream, bits: int): int =
 
 func calcValue(typeId: TypeId, packets: seq[Packet]): int =
     let values = packets.mapIt(it.value)
-    #debugEcho "calcValue: ", typeId, ", ", values
     
     return case typeId:
         of TypeId.sum:
@@ -115,8 +115,9 @@ proc readPacket(stream: Stream): Packet =
                 packets.add(packet)
 
         result.value = calcValue(result.typeId, packets)
+        logger.log(lvlDebug, fmt"calcValue: {result.typeId} {packets.mapIt(it.value)} = {result.value}")
 
-    #debugEcho(result)
+    logger.log(lvlDebug, fmt"Packet{result}")
  
 
 when isMainModule:
