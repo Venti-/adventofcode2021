@@ -85,7 +85,7 @@ when isMainModule:
                 cave == @[@[1, 2, 3], @[4, 5, 6], @[7, 8, 9]]
 
         test "Example 1":
-            let cave = readInput(readFile("input/9example"))
+            let cave = readInput(readFile("example/9example"))
             check:
                 not cave.isLowPoint((0, 0))
                 cave.isLowPoint((0, 1))
@@ -96,7 +96,7 @@ when isMainModule:
                 cave.points().toSeq().filterIt(cave.isLowPoint(it)).mapIt(cave.getHeight(it) + 1).foldl(a + b) == 15
 
         test "Example 2":
-            let cave = readInput(readFile("input/9example"))
+            let cave = readInput(readFile("example/9example"))
             check:
                 cave.basinSize((0, 0)) == 3
                 cave.basinSize((0, 9)) == 9

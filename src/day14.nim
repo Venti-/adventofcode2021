@@ -70,13 +70,13 @@ when isMainModule:
     import std/unittest
     suite "Day14":
         test "read example":
-            let (polymer, rules) = readInput(newFileStream("input/14example"))
+            let (polymer, rules) = readInput(newFileStream("example/14example"))
             check polymer == "NNCB"
             check rules.len == 16
             check rules["CH"] == 'B'
 
         test "Example":
-            let (polymer, rules) = readInput(newFileStream("input/14example"))
+            let (polymer, rules) = readInput(newFileStream("example/14example"))
             check countLetters(polymer, rules, 1) == toCountTable("NCNBCHB")
             check countLetters(polymer, rules, 4) == toCountTable("NBBNBNBBCCNBCNCCNBBNBBNBBBNBBNBBCBHCBHHNHCBBCBHCB")
             

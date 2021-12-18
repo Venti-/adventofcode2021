@@ -52,7 +52,7 @@ when isMainModule:
     import std/unittest
     suite "Day6":
         test "Read example input":
-            let ages = parseInput(readFile("input/6example"))
+            let ages = parseInput(readFile("example/6example"))
             check:
                 ages == newAges([3,4,3,1,2])
 

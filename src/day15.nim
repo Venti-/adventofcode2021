@@ -112,7 +112,7 @@ when isMainModule:
             check repeat(board, 2, 3) == @[@[8, 9, 1], @[9, 1, 2]]
         
         test "example 1":
-            let board = readInput(newFileStream("input/15example"))
+            let board = readInput(newFileStream("example/15example"))
             #echo board.mapIt(it.join("")).toSeq().join("\n")
 
             let path = bfs(board, (0, 0), (board.high, board[0].high))
@@ -120,7 +120,7 @@ when isMainModule:
             check path.mapIt(board[it.y][it.x]).foldl(a + b) == 40
 
         test "example 2":
-            let board = readInput(newFileStream("input/15example")).repeat(5, 5)
+            let board = readInput(newFileStream("example/15example")).repeat(5, 5)
             #echo board.mapIt(it.join("")).toSeq().join("\n")
 
             let path = bfs(board, (0, 0), (board.high, board[0].high))

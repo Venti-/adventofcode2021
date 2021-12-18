@@ -114,8 +114,8 @@ when isMainModule:
         
         test "example 1":
             check:
-                countFlashes(readInput(readFile("input/11example")), 10) == 204
-                countFlashes(readInput(readFile("input/11example")), 100) == 1656
+                countFlashes(readInput(readFile("example/11example")), 10) == 204
+                countFlashes(readInput(readFile("example/11example")), 100) == 1656
 
 
 when isMainModule:

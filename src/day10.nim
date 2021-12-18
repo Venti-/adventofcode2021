@@ -49,11 +49,11 @@ when isMainModule:
     suite "Day10":
         test "Example 1":
             check:
-                calcCorruption("input/10example") == 26397
+                calcCorruption("example/10example") == 26397
 
         test "Example 2":
             check:
-                calcScore("input/10example") == 288957
+                calcScore("example/10example") == 288957
 
 
 when isMainModule:

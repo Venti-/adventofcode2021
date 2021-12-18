@@ -117,5 +117,5 @@ proc solution(path: string): int =
     echo("Life support rating: ", o2rating * co2rating)
 
 
-#echo(solution("input/3example"))
+#echo(solution("example/3example"))
 echo(solution("input/3"))

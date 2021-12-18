@@ -83,13 +83,13 @@ when isMainModule:
             check edges == expected
 
         test "example 1":
-            let edges = readInput(newFileStream("input/12example"))
+            let edges = readInput(newFileStream("example/12example"))
             let routes = collect:
                 for route in iterRoutes(edges, 1): route
             check routes.len == 10
 
         test "example 2":
-            let edges = readInput(newFileStream("input/12example"))
+            let edges = readInput(newFileStream("example/12example"))
             let routes = collect:
                 for route in iterRoutes(edges, 2): route
             check routes.len == 36

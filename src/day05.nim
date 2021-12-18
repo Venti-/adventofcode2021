@@ -111,11 +111,11 @@ when isMainModule:
         
         test "example 1":
             check:
-                countOverlaps("input/5example", isStraight) == 5
+                countOverlaps("example/5example", isStraight) == 5
         
         test "example 2":
             check:
-                countOverlaps("input/5example", (line) => true) == 12
+                countOverlaps("example/5example", (line) => true) == 12
 
 when isMainModule:
     block:

@@ -181,13 +181,13 @@ when isMainModule:
             check: calcBoardSum(board) == 7
 
         test "example 1":
-            let (board, number) = findWinner("input/4example")
+            let (board, number) = findWinner("example/4example")
             check:
                 number == 24
                 calcBoardSum(board) == 188
 
         test "example 2":
-            let (board, number) = findLastWinner("input/4example")
+            let (board, number) = findLastWinner("example/4example")
             check:
                 number == 13
                 calcBoardSum(board) == 148

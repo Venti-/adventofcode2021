@@ -133,10 +133,10 @@ when isMainModule:
             check descramble(numbers, setToDigit) == 8394
 
         test "Example 1":
-            check solve1("input/8example") == 26
+            check solve1("example/8example") == 26
         
         test "Example 2":
-            check sumLines("input/8example") == 61229
+            check sumLines("example/8example") == 61229
         
         test "Solution 1":
             check solve1("input/8") == 349

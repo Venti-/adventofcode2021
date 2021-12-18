@@ -65,12 +65,12 @@ when isMainModule:
     import std/unittest
     suite "Day7":
         test "Read example input":
-            let crabs = parseInput(readFile("input/7example"))
+            let crabs = parseInput(readFile("example/7example"))
             check:
                 crabs == newCrabs([16,1,2,0,4,2,7,1,2,14])
 
         test "calcFuel":
-            let crabs = parseInput(readFile("input/7example"))
+            let crabs = parseInput(readFile("example/7example"))
             check:
                 calcFuel(crabs, 1) == 41
                 calcFuel(crabs, 2) == 37
@@ -79,7 +79,7 @@ when isMainModule:
                 findLowestFuel(crabs, calcFuel) == 2
 
         test "calcExpFuel":
-            let crabs = parseInput(readFile("input/7example"))
+            let crabs = parseInput(readFile("example/7example"))
             check:
                 calcExpFuel(crabs, 0) == 290
                 calcExpFuel(crabs, 2) == 206
